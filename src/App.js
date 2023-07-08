@@ -3,19 +3,21 @@ import './App.css';
 import Navbar from './components/layouts/Navbar';
 import Users from './components/user/Users';
 import axios from 'axios';
+import Alert from './components/layouts/Alert';
 import Search from './components/user/Search';
 
 class App extends Component{
   state ={
     users: [],
-    loading : false
+    loading : false,
+    alert: null
   }
 
- async componentDidMount(){
-    this.setState({loading: true})
-    const res = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
-    this.setState({users: res.data, loading:false })
-  }
+//  async componentDidMount(){
+//     this.setState({loading: true})
+//     const res = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+//     this.setState({users: res.data, loading:false })
+//   }
 
   searchUsers = async text =>{
     this.setState({loading: true});
@@ -23,13 +25,29 @@ class App extends Component{
     this.setState({users: res.data.items, loading:false })
   }
 
+  clearUsers = ()=>{
+    this.setState({users: []})
+  }
+
+  setAlert = (msg, type) =>{
+    this.setState({alert:{
+      msg,
+      type
+    }})
+    setTimeout(() => {
+      this.setState({alert:null})
+    }, 1000);
+  }
+
   render(){
+    const {users, loading} = this.state;
     return  (
     <div className='App'>
       <Navbar title="Github Finder" icon ="fa-brands fab fa-github"/>
       <div className="container">
-        <Search searchUsers={this.searchUsers}/>
-        <Users loading = {this.state.loading} users={this.state.users}/>
+        <Alert alert={this.state.alert} />
+        <Search searchUsers={this.searchUsers} setAlert={this.setAlert} clearUsers={this.clearUsers} showClear={users.length > 0 ? true : false}/>
+        <Users loading = {loading} users={users}/>
       </div>
     </div>
     )
