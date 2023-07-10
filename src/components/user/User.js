@@ -1,16 +1,17 @@
 import React, { Component, Fragment, useEffect, useContext} from 'react';
 import { useParams } from "react-router-dom";
+import Repos from '../repos/Repos';
 import Spinner from '../layouts/Spinner';
 import { Link } from 'react-router-dom';
 
-//NIE DZIAŁA POBRANIE LOGINU Z URL
 
-const User = ({getUser, user, loading})=> {
+const User = ({getUser, getUserRepos, repos, user, loading})=> {
     const { login } = useParams();
 
     
     useEffect(() => {
       getUser(login);
+      getUserRepos(login)
       
     }, []);
     
@@ -75,6 +76,7 @@ const User = ({getUser, user, loading})=> {
               <div className='badge badge-dark'>Public Gists: {public_gists}</div>
             </div>
             
+            <Repos repos={repos}/>
         </Fragment>
       )
     }
