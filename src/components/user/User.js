@@ -3,18 +3,23 @@ import { useParams } from "react-router-dom";
 import Repos from '../repos/Repos';
 import Spinner from '../layouts/Spinner';
 import { Link } from 'react-router-dom';
+import GithubContext from '../../context/github/githubContext';
 
 
-const User = ({getUser, getUserRepos, repos, user, loading})=> {
+
+const User = ()=> {
+  const githubContext = useContext(GithubContext)
+  const {getUser, loading, user, repos, getUserRepos} = githubContext
+
     const { login } = useParams();
 
-    
     useEffect(() => {
       getUser(login);
       getUserRepos(login)
       
     }, []);
     
+  
 
     const {name, avatar_url, location, bio, blog, html_url, company, followers, following, public_repos, public_gists, hireable} = user;
     if(loading){
